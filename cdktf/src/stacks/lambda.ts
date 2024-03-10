@@ -66,7 +66,7 @@ export class LambdaStack extends TerraformStack {
 
     // Create unique S3 bucket that hosts Lambda executable
     const bucket = new s3Bucket.S3Bucket(this, "bucket", {
-      bucketPrefix: `cdktf-auth-${name}`,
+      bucketPrefix: `cdktf-${name}`,
     });
 
     // Upload Lambda zip file to newly created S3 bucket
@@ -78,7 +78,7 @@ export class LambdaStack extends TerraformStack {
 
     // Create Lambda role
     const role = new iamRole.IamRole(this, "lambda-exec", {
-      name: `cdktf-auth-${name}-${petName.id}`,
+      name: `cdktf-${name}-${petName.id}`,
       assumeRolePolicy: JSON.stringify(lambdaRolePolicy),
     });
 

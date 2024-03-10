@@ -55,6 +55,8 @@ const authenticate = async (event: {
 
   const CONFIG = await initializeConfig();
 
+  console.log("lambda-auth: CONFIG ->", CONFIG);
+
   const params = {
     AuthFlow: "USER_PASSWORD_AUTH",
     ClientId: CONFIG.userPoolClientId, // replace with your Client ID

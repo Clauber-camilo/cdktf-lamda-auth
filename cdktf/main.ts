@@ -11,7 +11,7 @@ new LambdaStack(app, "lambda-auth", {
   handler: "index.handler",
   runtime: "nodejs16.x",
   stageName: "auth",
-  version: "v0.0.1",
+  version: "v0.1",
   region: "us-east-1",
 });
 
