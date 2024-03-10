@@ -91,7 +91,7 @@ class LambdaStack extends TerraformStack {
       this,
       "auth-lambda-func",
       {
-        functionName: `learn-cdktf-${name}-${pet.id}`,
+        functionName: `cdktf-${name}-${pet.id}`,
         s3Bucket: bucket.bucket,
         s3Key: lambdaArchive.key,
         handler: config.handler,
