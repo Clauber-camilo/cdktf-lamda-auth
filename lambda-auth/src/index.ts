@@ -1,5 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import * as AWS from "aws-sdk";
+import { initializeConfig } from "./config/env";
 
 AWS.config.update({ region: "us-east-1" });
 
@@ -12,8 +13,10 @@ const createUser = async (event: {
 }): Promise<APIGatewayProxyResult> => {
   const { email, cpf, password } = event;
 
+  const CONFIG = await initializeConfig();
+
   const params = {
-    UserPoolId: "your_user_pool_id", // replace with your User Pool ID
+    UserPoolId: CONFIG.userPoolId, // replace with your User Pool ID
     Username: cpf,
     TemporaryPassword: password,
     UserAttributes: [
@@ -50,9 +53,11 @@ const authenticate = async (event: {
   console.info("lambda-auth: event ->", event);
   const { cpf, password } = event;
 
+  const CONFIG = await initializeConfig();
+
   const params = {
     AuthFlow: "USER_PASSWORD_AUTH",
-    ClientId: "2k9msi4564g5c2r1fbepgj7b8o", // replace with your Client ID
+    ClientId: CONFIG.userPoolClientId, // replace with your Client ID
     AuthParameters: {
       USERNAME: cpf,
       PASSWORD: password,
@@ -76,7 +81,7 @@ export const handler = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
   console.info("lambda-auth: event ->", event);
-  const route = event.requestContext.path;
+  const route = event.requestContext.resourcePath;
   const parsedBody = event.body ? JSON.parse(event.body) : {};
 
   console.info("lambda-auth: route ->", route);

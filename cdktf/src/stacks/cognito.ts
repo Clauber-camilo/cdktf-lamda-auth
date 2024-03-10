@@ -4,6 +4,7 @@ import {
   cognitoUserPoolClient,
 } from "@cdktf/provider-aws";
 import { CognitoUserPoolConfig } from "@cdktf/provider-aws/lib/cognito-user-pool";
+import { SsmParameter } from "@cdktf/provider-aws/lib/ssm-parameter";
 import { provider as randomProvider } from "@cdktf/provider-random";
 import { TerraformOutput, TerraformStack } from "cdktf";
 import { Construct } from "constructs";
@@ -62,6 +63,18 @@ class CognitoStack extends TerraformStack {
 
     new TerraformOutput(this, "userPoolId", { value: userPool.id });
     new TerraformOutput(this, "userPoolClientId", { value: userPoolClient.id });
+
+    new SsmParameter(this, "UserPoolIdParameter", {
+      name: "/lambda-auth/userPoolId",
+      type: "String",
+      value: userPool.id,
+    });
+
+    new SsmParameter(this, "UserPoolClientIdParameter", {
+      name: "/lambda-auth/userPoolClientId",
+      type: "String",
+      value: userPoolClient.id,
+    });
   }
 }
 
