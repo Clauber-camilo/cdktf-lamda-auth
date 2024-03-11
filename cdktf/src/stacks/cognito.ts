@@ -23,7 +23,6 @@ const userpollConfig = (name: string): CognitoUserPoolConfig => ({
     },
   ],
   // Set the username attributes
-  usernameAttributes: ["email"],
   autoVerifiedAttributes: ["email"],
   accountRecoverySetting: {
     recoveryMechanism: [
@@ -57,7 +56,7 @@ class CognitoStack extends TerraformStack {
       {
         name: `userpool-client-${name}`,
         userPoolId: userPool.id,
-        explicitAuthFlows: ["ADMIN_NO_SRP_AUTH"],
+        explicitAuthFlows: ["ADMIN_NO_SRP_AUTH", "USER_PASSWORD_AUTH"],
       }
     );
 
