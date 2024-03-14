@@ -6,14 +6,13 @@
     "experimentalDecorators": true,
     "inlineSourceMap": true,
     "inlineSources": true,
-    "lib": [
-      "es2018"
-    ],
+    "lib": ["es2018"],
     "module": "CommonJS",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
+    "outDir": "./dist" /* Redirect output structure to the directory. */,
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -25,11 +24,7 @@
     "target": "ES2018",
     "incremental": true
   },
-  "include": [
-    "**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "cdktf.out"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "cdktf.out"]
 }
+
