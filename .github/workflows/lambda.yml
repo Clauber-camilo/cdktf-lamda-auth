@@ -17,6 +17,10 @@ on:
       - "**/*.md"
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: lambda-auth
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,8 +36,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: ./lambda-auth
 
       - name: Run build
         run: npm run build
-        working-directory: ./lambda-auth
