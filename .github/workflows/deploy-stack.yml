@@ -90,6 +90,7 @@ jobs:
           terraformVersion: 1.7.4
           mode: auto-approve-apply
           stackName: cognito-lambda
+          workingDirectory: cdktf/
           terraformCloudToken: ${{ secrets.TF_CLOUD }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
