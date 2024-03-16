@@ -36,6 +36,9 @@ jobs:
     runs-on: ubuntu-latest
     # environment:
     #   name: approvers
+    defaults:
+      run:
+        working-directory: lambda-auth
     needs: [build-lambda]
     steps:
       - name: Checkout
@@ -47,9 +50,6 @@ jobs:
 
       - name: list directory
         run: ls -la
-
-      - name: move to internal folder
-        run: cd cdktf
 
       - name: Install dependencies
         run: npm install
