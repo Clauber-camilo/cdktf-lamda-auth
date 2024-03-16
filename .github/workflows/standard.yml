@@ -4,17 +4,9 @@ on:
   push:
     branches:
       - main
-      - develop
-      - "feat/**"
-      - "fix/**"
-      - "release/**"
-    paths-ignore:
-      - "**/*.md"
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - "**/*.md"
   workflow_dispatch:
 
 jobs:
@@ -50,66 +42,26 @@ jobs:
     needs: [build-lambda]
     defaults:
       run:
-        working-directory: ./cdktf
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-
-      - name: Install CDKTF CLI
-        run: npm install -g cdktf-cli
-
-      - name: Install Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.1.7
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run Tests
-        run: npm test
-
-      - name: Deploy
-        run: cdktf deploy --auto-approve '*' # Deploys all stacks
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  destroy-terraform:
-    runs-on: ubuntu-latest
-    needs: [deploy-terraform]
-    defaults:
-      run:
         working-directory: cdktf
-    environment:
-      name: approvers
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18.x
-          cache: "npm"
-
-      - name: Install CDKTF CLI
-        run: npm install -g cdktf-cli@next
-
-      - name: Install Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.1.7
+          node-version: 18
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      - name: Generate bindings for providers and modules
-        run: cdktf get
+      - name: Run unit tests
+        run: npm run test
 
-      - name: Destroy
-        run: cdktf destroy --auto-approve '*' # Destroys all stacks
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Terraform CDK
+        uses: hashicorp/terraform-cdk-action@v3
+        with:
+          cdktfVersion: 0.20.4
+          terraformVersion: 1.7.4
+          mode: plan-only
+          stackName: cognito-lambda
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
