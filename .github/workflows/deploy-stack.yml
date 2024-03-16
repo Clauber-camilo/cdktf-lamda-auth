@@ -80,8 +80,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: terraform synth
-        run: npx cdktf-cli plain
+      - name: terraform plan
+        run: npx cdktf-cli plan
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.3.1
