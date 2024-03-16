@@ -77,12 +77,14 @@ class CognitoStack extends TerraformStack {
       name: "/lambda-auth/userPoolId",
       type: "String",
       value: userPool.id,
+      overwrite: true,
     });
 
     new SsmParameter(this, "UserPoolClientIdParameter", {
       name: "/lambda-auth/userPoolClientId",
       type: "String",
       value: userPoolClient.id,
+      overwrite: true,
     });
   }
 }
