@@ -61,6 +61,7 @@ jobs:
         uses: hashicorp/terraform-cdk-action@v3
         with:
           cdktfVersion: 0.20.4
+          workingdirectory: ./cdktf
           terraformVersion: 1.7.4
           mode: plan-only
           stackName: cognito-lambda

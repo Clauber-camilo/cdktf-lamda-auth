@@ -1,6 +1,6 @@
 name: Destroy terraform stack
 
-on: [workflow_dispatch]
+on: workflow_dispatch
 
 jobs:
   destroy-terraform:
@@ -31,6 +31,7 @@ jobs:
         with:
           cdktfVersion: 0.20.4
           terraformVersion: 1.7.4
+          workingdirectory: ./cdktf
           mode: auto-approve-destroy
           stackName: cognito-lambda
           githubToken: ${{ secrets.GITHUB_TOKEN }}
