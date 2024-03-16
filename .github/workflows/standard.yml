@@ -34,8 +34,8 @@ jobs:
 
   deploy-terraform:
     runs-on: ubuntu-latest
-    environment:
-      name: approvers
+    # environment:
+    #   name: approvers
     needs: [build-lambda]
     defaults:
       run:
@@ -53,6 +53,9 @@ jobs:
 
       - name: Run unit tests
         run: npm run test
+
+      - name: list directory
+        run: ls -la
 
       - name: list available stacks
         run: npx cdktf-cli list
