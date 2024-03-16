@@ -81,7 +81,7 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: terraform plan
-        run: npx cdktf-cli plan
+        run: npx cdktf-cli plan cognito-lambda
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.3.1
