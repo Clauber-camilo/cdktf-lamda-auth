@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v4.3.1
         with:
           name: lambda-out
-          path: dist/
+          path: lambda-auth/dist/
 
   deploy-terraform:
     runs-on: ubuntu-latest
