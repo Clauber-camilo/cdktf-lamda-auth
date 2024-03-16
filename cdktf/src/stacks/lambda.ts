@@ -12,6 +12,7 @@ import { SsmParameter } from "@cdktf/provider-aws/lib/ssm-parameter";
 import { pet, provider as randomProvider } from "@cdktf/provider-random";
 import {
   AssetType,
+  RemoteBackend,
   TerraformAsset,
   TerraformOutput,
   TerraformStack,
@@ -19,6 +20,7 @@ import {
 import { Construct } from "constructs";
 import * as path from "path";
 import { apiGatewayConfig } from "../apigateway";
+import { cognitoConfig } from "../cognito";
 
 interface LambdaFunctionConfig {
   path: string;
@@ -48,8 +50,17 @@ export class LambdaStack extends TerraformStack {
   constructor(scope: Construct, name: string, config: LambdaFunctionConfig) {
     super(scope, name);
 
+    new RemoteBackend(this, {
+      organization: "pos-fiap",
+      workspaces: {
+        name: "cdktf-lambda-auth",
+      },
+    });
+
     new awsProvider.AwsProvider(this, "aws", {
       region: config.region,
+      accessKey: process.env.AWS_ACCESS_KEY_ID,
+      secretKey: process.env.AWS_SECRET_ACCESS_KEY,
     });
 
     new randomProvider.RandomProvider(this, "random");
@@ -58,6 +69,8 @@ export class LambdaStack extends TerraformStack {
     const petName = new pet.Pet(this, "random-name", {
       length: 2,
     });
+
+    cognitoConfig(this, name, petName.id);
 
     // Create Lambda executable
     const asset = new TerraformAsset(this, "lambda-asset", {

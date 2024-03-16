@@ -1,10 +1,7 @@
 import { App } from "cdktf";
-import { CognitoStack } from "./src/stacks/cognito";
 import { LambdaStack } from "./src/stacks/lambda";
 
 const app = new App();
-
-new CognitoStack(app, "cognito-lambda");
 
 new LambdaStack(app, "lambda-auth", {
   path: "../../lambda-out",

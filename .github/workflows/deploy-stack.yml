@@ -44,8 +44,8 @@ jobs:
 
   deploy-terraform:
     runs-on: ubuntu-latest
-    # environment:
-    #   name: approvers
+    environment:
+      name: approvers
     defaults:
       run:
         working-directory: cdktf
@@ -80,26 +80,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      # - name: terraform plan
-      #   run: npx cdktf-cli plan cognito-lambda
-
       - name: Run Terraform CDK
         uses: hashicorp/terraform-cdk-action@v3
         with:
           cdktfVersion: 0.20.4
           terraformVersion: 1.7.4
           mode: auto-approve-apply
-          stackName: cognito-lambda
+          stackName: ${{ env.STACK_NAME }}
           workingDirectory: cdktf/
           terraformCloudToken: ${{ secrets.TF_CLOUD }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Upload a Build Artifact
-      #   uses: actions/upload-artifact@v4.3.1
-      #   with:
-      #     name: terraform-out
-      #     path: cdktf/cdktf.out/
-      #     if-no-files-found: error
-      #
-      # - name: terraform deploy cognito
-      #   run: npx cdktf-cli deploy cognito-lambda --auto-approve
