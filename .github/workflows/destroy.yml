@@ -3,6 +3,37 @@ name: Destroy terraform stack
 on: workflow_dispatch
 
 jobs:
+  build-lambda:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lambda-auth
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run build
+        run: npm run build && ls -la
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: lambda-out
+          path: lambda-auth/dist/
+          if-no-files-found: error
+
   destroy-terraform:
     name: "Destroy TF Stack"
     runs-on: ubuntu-latest
@@ -17,11 +48,14 @@ jobs:
         with:
           node-version: 18
 
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v4.1.4
+        with:
+          name: lambda-out
+          path: cdktf/lambda-out
+
       - name: Install dependencies
         run: npm install
-
-      - name: Run unit tests
-        run: npm run test
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4

@@ -60,9 +60,6 @@ jobs:
           name: lambda-out
           path: cdktf/lambda-out
 
-      - name: Display structure of downloaded files
-        run: ls -R
-
       - name: Install dependencies
         run: npm install
 
