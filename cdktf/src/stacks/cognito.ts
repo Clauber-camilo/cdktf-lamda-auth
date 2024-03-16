@@ -7,7 +7,7 @@ import {
 import { CognitoUserPoolConfig } from "@cdktf/provider-aws/lib/cognito-user-pool";
 import { SsmParameter } from "@cdktf/provider-aws/lib/ssm-parameter";
 import { provider as randomProvider } from "@cdktf/provider-random";
-import { TerraformOutput, TerraformStack } from "cdktf";
+import { RemoteBackend, TerraformOutput, TerraformStack } from "cdktf";
 import { Construct } from "constructs";
 
 const userpollConfig = (name: string): CognitoUserPoolConfig => ({
@@ -38,6 +38,13 @@ const userpollConfig = (name: string): CognitoUserPoolConfig => ({
 class CognitoStack extends TerraformStack {
   constructor(scope: Construct, name: string) {
     super(scope, name);
+
+    new RemoteBackend(this, {
+      organization: "pos-fiap",
+      workspaces: {
+        name: "cdktf-lambda-auth",
+      },
+    });
 
     new awsProvider.AwsProvider(this, "aws", {
       region: "us-east-1",
