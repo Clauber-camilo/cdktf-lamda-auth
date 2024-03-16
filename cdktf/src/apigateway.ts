@@ -86,47 +86,4 @@ export const apiGatewayConfig = (
   stage.overrideLogicalId(name);
 
   return { api, stage };
-
-  // const createUserResource = new aws.apiGatewayResource.ApiGatewayResource(
-  //   instance,
-  //   "create-user-resource",
-  //   {
-  //     parentId: api.rootResourceId,
-  //     restApiId: api.id,
-  //     pathPart: "create",
-  //   }
-  // );
-  //
-  // const createUserMethod = new aws.apiGatewayMethod.ApiGatewayMethod(
-  //   instance,
-  //   "CreateUserApiGatewayMethod",
-  //   {
-  //     restApiId: api.id,
-  //     resourceId: createUserResource.id,
-  //     httpMethod: "POST",
-  //     authorization: "NONE",
-  //   }
-  // );
-  //
-  // new aws.apiGatewayIntegration.ApiGatewayIntegration(
-  //   instance,
-  //   "CreateUserApiGatewayIntegration",
-  //   {
-  //     restApiId: api.id,
-  //     resourceId: createUserResource.id,
-  //     httpMethod: createUserMethod.httpMethod,
-  //     type: "AWS_PROXY",
-  //     integrationHttpMethod: "POST",
-  //     uri: lambdaFunc.invokeArn,
-  //   }
-  // );
-
-  // Create and configure API gateway
-  // const api = new aws.apigatewayv2Api.Apigatewayv2Api(instance, "api-gw", {
-  //   name: name,
-  //   protocolType: "HTTP",
-  //   target: lambdaFunc.arn,
-  // });
-
-  // return { api, stage };
 };

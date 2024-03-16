@@ -1,43 +1,16 @@
-name: Destroy terraform stack
+name: destroy_tf_stack
 
 on: workflow_dispatch
 
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+
 jobs:
-  build-lambda:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: lambda-auth
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: us-east-1
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 16
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run build
-        run: npm run build && ls -la
-
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.3.1
-        with:
-          name: lambda-out
-          path: lambda-auth/dist/
-          if-no-files-found: error
-
   destroy-terraform:
     name: "Destroy TF Stack"
     runs-on: ubuntu-latest
-    needs: [build-lambda]
     defaults:
       run:
         working-directory: cdktf
@@ -49,11 +22,25 @@ jobs:
         with:
           node-version: 18
 
+      - name: Get run id of the latest successful build workflow
+        id: get_run_id
+        run: |
+          run_id=$(curl --request GET \
+            --url https://api.github.com/repos/${{ github.repository }}/actions/workflows/build_and_deploy/runs \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --header 'Accept: application/vnd.github.v3+json' \
+            | jq -r '.workflow_runs[] | select(.conclusion=="success") | .id' | head -n 1)
+          echo "run_id=$run_id" >> $GITHUB_ENV
+
+      - run: echo $run_id
+
       - name: Download a Build Artifact
         uses: actions/download-artifact@v4.1.4
         with:
           name: lambda-out
+          gitub-token: ${{ secrets.GITHUB_TOKEN }}
           path: cdktf/lambda-out
+          run-id: ${{env.run_id}}
 
       - name: Install dependencies
         run: npm install
