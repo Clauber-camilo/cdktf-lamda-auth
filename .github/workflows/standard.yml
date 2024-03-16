@@ -31,6 +31,12 @@ jobs:
       - name: Run build
         run: npm run build
 
+      - name: Upload lambda artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lambda-artifact
+          path: ./lambda-out
+
   deploy-terraform:
     runs-on: ubuntu-latest
     # environment:
@@ -47,16 +53,11 @@ jobs:
         with:
           node-version: 18
 
-      - name: list directory lambda-artifact
-        run: |
-          cd ..
-          cd lambda-auth
-          ls -la
-
-      - name: execute script
-        run: |
-          cd ..
-          ./script.sh
+      - name: Download lambda artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: lambda-artifact
+          path: ./out
 
       - name: Install dependencies
         run: npm install

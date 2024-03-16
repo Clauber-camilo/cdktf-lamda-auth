@@ -7,7 +7,7 @@ const app = new App();
 new CognitoStack(app, "cognito-lambda");
 
 new LambdaStack(app, "lambda-auth", {
-  path: "../../../lambda-auth/dist",
+  path: "../../lambda-out",
   handler: "index.handler",
   runtime: "nodejs16.x",
   stageName: "auth",

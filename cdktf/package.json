@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "get": "cdktf get",
+    "pre-build": "cd .. && ./script.sh && cd cdktf",
     "build": "tsc",
     "synth": "cdktf synth",
     "compile": "tsc --pretty",
@@ -14,7 +15,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "upgrade": "npm i cdktf@latest cdktf-cli@latest",
-    "upgrade:next": "npm i cdktf@next cdktf-cli@next"
+    "upgrade:next": "npm i cdktf@next cdktf-cli@next",
+    "deploy": "npx cdktf-cli deploy",
+    "destroy": "npx cdktf-cli deploy"
   },
   "engines": {
     "node": ">=14.0"

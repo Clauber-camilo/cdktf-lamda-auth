@@ -25,6 +25,5 @@
     "incremental": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "cdktf.out"]
+  "exclude": ["node_modules", "cdktf.out", "lambda-out", "dist"]
 }
-
