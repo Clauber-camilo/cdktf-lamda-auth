@@ -37,9 +37,6 @@ jobs:
     # environment:
     #   name: approvers
     needs: [build-lambda]
-    defaults:
-      run:
-        working-directory: cdktf
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,6 +44,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
+
+      - name: list directory
+        run: ls -la
+
+      - name: move to internal folder
+        run: cd cdktf
 
       - name: Install dependencies
         run: npm install
