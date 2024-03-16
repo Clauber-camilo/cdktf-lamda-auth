@@ -8,6 +8,7 @@ permissions:
 
 jobs:
   build-lambda:
+    name: Build lambda
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -39,6 +40,7 @@ jobs:
           if-no-files-found: error
 
   terraform-plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -77,7 +79,7 @@ jobs:
           cdktfVersion: 0.20.4
           terraformVersion: 1.7.4
           mode: plan-only
-          stackName: ${{ env.STACK_NAME }}
+          stackName: ${{ vars.STACK_NAME }}
           workingDirectory: cdktf/
           terraformCloudToken: ${{ secrets.TF_CLOUD }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}

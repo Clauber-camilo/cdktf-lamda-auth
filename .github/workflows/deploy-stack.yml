@@ -86,7 +86,7 @@ jobs:
           cdktfVersion: 0.20.4
           terraformVersion: 1.7.4
           mode: auto-approve-apply
-          stackName: ${{ env.STACK_NAME }}
+          stackName: ${{ vars.STACK_NAME }}
           workingDirectory: cdktf/
           terraformCloudToken: ${{ secrets.TF_CLOUD }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}

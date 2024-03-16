@@ -32,7 +32,7 @@ jobs:
           | jq -r '.workflow_runs[] | .id' | head -n 1)
           echo "run_id=$run_id" >> $GITHUB_ENV
 
-      - run: echo "${{ env.run_id}}"
+      - run: echo "${{ env.run_id }}"
 
       - name: Download a Build Artifact
         uses: actions/download-artifact@v4.1.4
@@ -58,10 +58,7 @@ jobs:
           cdktfVersion: 0.20.4
           terraformVersion: 1.7.4
           mode: auto-approve-destroy
-          stackName: ${{ env.STACK_NAME }}
+          stackName: ${{ vars.STACK_NAME }}
           workingDirectory: cdktf/
           terraformCloudToken: ${{ secrets.TF_CLOUD }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: terraform destroy cognito
-      #   run: npx cdktf-cli destroy cognito-lambda --auto-approve
