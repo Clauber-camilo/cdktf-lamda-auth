@@ -18,24 +18,18 @@ jobs:
       AWS_DEFAULT_REGION: us-east-1
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Use Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: 16
 
       - name: Install dependencies
         run: npm ci
 
       - name: Run build
         run: npm run build
-
-      - name: Copy the dist to cdktf folder
-        run: |
-          cd ..
-          ./script.sh
 
   deploy-terraform:
     runs-on: ubuntu-latest
@@ -53,8 +47,16 @@ jobs:
         with:
           node-version: 18
 
-      - name: list directory
-        run: ls -la
+      - name: list directory lambda-artifact
+        run: |
+          cd ..
+          cd lambda-auth
+          ls -la
+
+      - name: execute script
+        run: |
+          cd ..
+          ./script.sh
 
       - name: Install dependencies
         run: npm install

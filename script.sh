@@ -1,3 +1,3 @@
-mv lambda-auth/dist cdktf/out
+cp lambda-auth/dist cdktf/out
 cd cdktf
 ls -la
