@@ -34,7 +34,7 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: lambda-artifact
+          name: lambda-out
           path: ./dist
 
   deploy-terraform:
@@ -54,10 +54,12 @@ jobs:
           node-version: 18
 
       - name: Download a Build Artifact
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/download-artifact@v4.1.4
         with:
-          name: lambda-artifact
-          path: ./lambda-out
+          name: lambda-out
+
+      - name: Display structure of downloaded files
+        run: ls -R
 
       - name: Install dependencies
         run: npm install
