@@ -25,24 +25,22 @@ jobs:
       - name: Get run id of the latest successful build workflow
         id: get_run_id
         run: |
-          echo "${{ github.repository }}"
-          echo "${{ secrets.GITHUB_TOKEN }}"
-          run_id=$(curl --request GET \
-            --url https://api.github.com/repos/${{ github.repository }}/actions/workflows/build_and_deploy/runs \
-            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          run_id=$(curl \ 
+            --location 'https://api.github.com/repos/${{ github.repository }}/actions/runs?status=success&event=push&branches=main' \
             --header 'Accept: application/vnd.github.v3+json' \
-            | jq -r '.workflow_runs[] | select(.conclusion=="success") | .id' | head -n 1)
-          echo "run_id=$run_id" >> $GITHUB_ENV
+            --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN}}' \
+          | jq -r '.workflow_runs[] | .id' | head -n 1)
+          echo "::set-output name=run_id::${run_id}"
 
-      - run: echo "$run_id"
+      - run: echo "${{ steps.get_run_id.outputs.run_id }}"
 
       - name: Download a Build Artifact
         uses: actions/download-artifact@v4.1.4
         with:
           name: lambda-out
-          gitub-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           path: cdktf/lambda-out
-          run-id: ${{env.run_id}}
+          run-id: ${{ steps.get_run_id.outputs.run_id }}
 
       - name: Install dependencies
         run: npm install
