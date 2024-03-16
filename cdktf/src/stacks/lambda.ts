@@ -8,6 +8,7 @@ import {
   s3Bucket,
   s3Object,
 } from "@cdktf/provider-aws";
+import { SsmParameter } from "@cdktf/provider-aws/lib/ssm-parameter";
 import { pet, provider as randomProvider } from "@cdktf/provider-random";
 import {
   AssetType,
@@ -136,8 +137,16 @@ export class LambdaStack extends TerraformStack {
       sourceArn: `${api.executionArn}/*/*`,
     });
 
+    const url = `https://${api.id}.execute-api.${config.region}.amazonaws.com/${stage.stageName}`;
+
     new TerraformOutput(this, "url", {
-      value: `https://${api.id}.execute-api.${config.region}.amazonaws.com/${stage.stageName}`,
+      value: url,
+    });
+
+    new SsmParameter(this, "LambdaUrl", {
+      name: "/lambda-auth/lambdaUrl",
+      type: "String",
+      value: url,
     });
   }
 }
