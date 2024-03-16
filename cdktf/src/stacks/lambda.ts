@@ -59,8 +59,6 @@ export class LambdaStack extends TerraformStack {
       length: 2,
     });
 
-    console.log("@@@@ PATH ->", path.resolve(__dirname, config.path));
-
     // Create Lambda executable
     const asset = new TerraformAsset(this, "lambda-asset", {
       path: path.resolve(__dirname, config.path),

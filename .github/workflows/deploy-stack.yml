@@ -1,6 +1,10 @@
-name: Build Lambda Application
+name: build_and_deploy
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
