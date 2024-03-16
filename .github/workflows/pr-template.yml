@@ -8,6 +8,7 @@ permissions:
 
 jobs:
   build-lambda:
+    name: Build lambda
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -39,6 +40,7 @@ jobs:
           if-no-files-found: error
 
   terraform-plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -71,7 +73,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: Terraform plan cognito
-        run: npx cdktf-cli plan cognito-lambda
-      - name: Terraform plan lambda-auth
-        run: npx cdktf-cli plan lambda-auth
+      - name: Terraform plan
+        uses: hashicorp/terraform-cdk-action@v3
+        with:
+          cdktfVersion: 0.20.4
+          terraformVersion: 1.7.4
+          mode: plan-only
+          stackName: ${{ vars.STACK_NAME }}
+          workingDirectory: cdktf/
+          terraformCloudToken: ${{ secrets.TF_CLOUD }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
