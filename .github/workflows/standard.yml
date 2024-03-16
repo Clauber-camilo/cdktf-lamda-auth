@@ -32,13 +32,18 @@ jobs:
       - name: Run build
         run: npm run build
 
+      - name: Copy the dist to cdktf folder
+        run: |
+          cd ..
+          ./script.sh
+
   deploy-terraform:
     runs-on: ubuntu-latest
     # environment:
     #   name: approvers
     defaults:
       run:
-        working-directory: lambda-auth
+        working-directory: cdktf
     needs: [build-lambda]
     steps:
       - name: Checkout
