@@ -40,8 +40,8 @@ jobs:
 
   deploy-terraform:
     runs-on: ubuntu-latest
-    # environment:
-    #   name: approvers
+    environment:
+      name: approvers
     defaults:
       run:
         working-directory: cdktf
@@ -81,12 +81,3 @@ jobs:
 
       - name: terraform deploy cognito
         run: npx cdktf-cli deploy cognito-lambda --auto-approve
-
-      # - name: terraform-cdk-action
-      #   uses: hashicorp/terraform-cdk-action@v3.0.7
-      #   with:
-      #     cdktfVersion: 0.20.4
-      #     terraformVersion: 1.7.4
-      #     mode: plan-only
-      #     stackName: cognito-lambda
-      #     githubToken: ${{ secrets.GITHUB_TOKEN }}
