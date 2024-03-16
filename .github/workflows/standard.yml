@@ -29,10 +29,10 @@ jobs:
         run: npm ci
 
       - name: Run build
-        run: npm run build
+        run: npm run build && ls -la
 
-      - name: Upload lambda artifact
-        uses: actions/upload-artifact@v2
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.3.1
         with:
           name: lambda-artifact
           path: ./dist
@@ -53,8 +53,8 @@ jobs:
         with:
           node-version: 18
 
-      - name: Download lambda artifact
-        uses: actions/download-artifact@v2
+      - name: Download a Build Artifact
+        uses: actions/upload-artifact@v4.3.1
         with:
           name: lambda-artifact
           path: ./lambda-out
