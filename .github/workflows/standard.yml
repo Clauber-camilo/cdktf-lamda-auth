@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: lambda-artifact
-          path: ./lambda-out
+          path: ./dist
 
   deploy-terraform:
     runs-on: ubuntu-latest
@@ -57,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: lambda-artifact
-          path: ./out
+          path: ./lambda-out
 
       - name: Install dependencies
         run: npm install
