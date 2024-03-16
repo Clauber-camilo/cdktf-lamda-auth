@@ -1,13 +1,10 @@
 name: Build Lambda Application
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+on: [pull_request]
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   build-lambda:
@@ -57,8 +54,11 @@ jobs:
       - name: Run unit tests
         run: npm run test
 
-      - name: Run Terraform CDK
-        uses: hashicorp/terraform-cdk-action@v3
+      - name: show folder
+        run: pwd
+
+      - name: terraform-cdk-action
+        uses: hashicorp/terraform-cdk-action@v3.0.7
         with:
           cdktfVersion: 0.20.4
           terraformVersion: 1.7.4
