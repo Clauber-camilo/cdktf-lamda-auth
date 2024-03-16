@@ -1,0 +1,37 @@
+name: Destroy terraform stack
+
+on: workflow_dispatch
+
+jobs:
+  destroy-terraform:
+    name: "Destroy TF Stack"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cdktf
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: Run Terraform CDK
+        uses: hashicorp/terraform-cdk-action@v3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        with:
+          cdktfVersion: 0.20.4
+          terraformVersion: 1.7.4
+          workingdirectory: ./cdktf
+          mode: auto-approve-destroy
+          stackName: cognito-lambda
+          githubToken: ${{ secrets.GITHUB_TOKEN }}

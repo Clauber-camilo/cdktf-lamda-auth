@@ -1,0 +1,92 @@
+name: Build Lambda Application
+
+on: [pull_request]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  build-lambda:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lambda-auth
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run build
+        run: npm run build && ls -la
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: lambda-out
+          path: lambda-auth/dist/
+          if-no-files-found: error
+
+  deploy-terraform:
+    runs-on: ubuntu-latest
+    # environment:
+    #   name: approvers
+    defaults:
+      run:
+        working-directory: cdktf
+    needs: [build-lambda]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v4.1.4
+        with:
+          name: lambda-out
+          path: cdktf/lambda-out
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        run: npm run test
+
+      - name: list directory
+        run: ls -la
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: terraform deploy cognito
+        run: npx cdktf-cli deploy cognito-lambda --auto-approve
+
+      # - name: terraform-cdk-action
+      #   uses: hashicorp/terraform-cdk-action@v3.0.7
+      #   with:
+      #     cdktfVersion: 0.20.4
+      #     terraformVersion: 1.7.4
+      #     mode: plan-only
+      #     stackName: cognito-lambda
+      #     githubToken: ${{ secrets.GITHUB_TOKEN }}
