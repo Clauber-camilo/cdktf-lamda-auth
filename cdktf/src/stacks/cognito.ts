@@ -48,7 +48,10 @@ class CognitoStack extends TerraformStack {
 
     new awsProvider.AwsProvider(this, "aws", {
       region: "us-east-1",
+      accessKey: process.env.AWS_ACCESS_KEY_ID,
+      secretKey: process.env.AWS_SECRET_ACCESS_KEY,
     });
+
     new randomProvider.RandomProvider(this, "cognito-random");
 
     const userPool = new cognitoUserPool.CognitoUserPool(
